@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <title>Sistema de Matriculas</title>
+  <style type="text/css">
+    body {
+      padding: 20px;
+      /*background-color: #333;
+      color: #fff;*/
+    }
+
+    h2 {
+      text-align: center;
+      color: #0c5460;
+    }
+
+    .login-form {
+      margin: 50px auto;
+    }
+    .login-form form {
+      margin-bottom: 15px;
+      background: #f7f7f7;
+      box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+      padding: 30px;
+    }
+    .login-form h2 {
+      margin: 0 0 15px;
+    }
+    .form-control {
+      min-height: 38px;
+      border-radius: 2px;
+    }
+
+    .logo {
+      height: 30px;
+      width: 100px;
+    }
+    .btn-back {
+      float: right;
+    }
+
+  </style>
+</head>
+<body>
+<div class="container-fluid">
+
+  <header class="navbar navbar-default">
+    <div class="container">
+      <div class="navbar-header">
+        <a class="navbar-brand" th:href="@{menu.do}">
+          <img th:src="${@environment.getProperty('ruta.logo')}" alt="Logo" class="logo">
+        </a>
+      </div>
+    </div>
+  </header>
+  <div class="login-form container">
+    <form method="post">
+      <h2>
+        <span th:if="${usuario.nombreCompleto}" th:text="|Bienvenid@ | + ${usuario.nombreCompleto}">Bienvenid@</span>
+        <span th:unless="${usuario.nombreCompleto}" th:text="'Bienvenid@'"></span>
+      </h2>
+      <br>
+      <div class="form-group">
+        <a th:href="@{|usuarioListar|}">Mantenimiento de Usuarios</a>
+      </div>
+      <div class="form-group">
+        <a th:href="@{|cursoListar|}">Consulta de cursos</a>
+      </div>
+      <div class="form-group">
+        <a th:href="@{|matriculaMostrar|}">Mantenimiento de matr&iacute;culas</a>
+      </div>
+      <div>&nbsp;</div>
+      <div class="form-group">
+      <a href="/" class="btn btn-warning btn-back" >Cerrar Sesi&oacute;n</a>
+      </div>
+      <div>&nbsp;</div>
+      <div>&nbsp;</div>
+    </form>
+  </div>
+</div>
+</body>
+</html>

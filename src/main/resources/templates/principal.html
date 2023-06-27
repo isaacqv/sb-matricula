@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title th:text="${@environment.getProperty('aplicacion.nombre')}"></title>
+    </head>
+    <body>
+        <h1 th:text="|Bienvenid@ |+${usuario.nombreCompleto}"></h1>
+        <br /><br />
+        <a th:href="@{|cursoListar|}" th:text="|Mantenimiento de Cursos|"></a>
+    </body>
+</html>

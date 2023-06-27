@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+  <script th:src="@{/js/jquery-3.2.1.min.js}" type="text/javascript"></script>
+  <script th:src="@{/js/bootstrap.min.js}" type="text/javascript"></script>
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+  <title th:text="${@environment.getProperty('aplicacion.nombre')}"></title>
+  <style>
+    .formFieldError {
+      color: red;
+    }
+  </style>
+  <script>
+    function modalEliminar(id, nombre){
+      $("msgEliminar").text("Seguro de eliminar el curso "+nombre+"?");
+      $('#btnEliminar').on("click",function (){
+        window.location="/cursoEliminar?codigo="+id;
+      });
+      $("#deleteModal").modal("show");
+    };
+    function modalModificar(id, nombre){
+      $("msgModificar").text("Seguro de modificar el curso "+nombre+"?");
+      $('#btnModificar').on("click",function (){
+        window.location="/cursoModificar?codigo="+id;
+      });
+      $("#updateModal").modal("show");
+    };
+  </script>
+</head>
+<body>
+<h1>Mantenimiento de Cursos</h1>
+<br/>
+<div class="table-responsive">
+  <table class="table table-responsive table-sm table-light table-striped table-bordered table-hover">
+    <thead>
+    <tr class="success">
+      <th>Código</th>
+      <th>Nombre</th>
+      <th>Fecha Inicio</th>
+      <th>Minimo alumnos</th>
+      <th>Inscritos</th>
+      <th>Estado</th>
+      <th>Eliminar</th>
+      <th>Modificar</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="curso : ${lista}">
+      <td th:text="${curso.idCurso}"></td>
+      <td th:text="${curso.nomCurso}"></td>
+      <td th:text="${#dates.format(curso.fechaInicio,'dd/MM/yyyy')}"></td>
+      <td th:text="${curso.alumnosMin}"></td>
+      <td th:text="${curso.alumnosAct}"></td>
+      <td th:text="${curso.estado}"></td>
+      <td align="center">
+        <!--<a th:href="@{|cursoEliminar?codigo=| + ${curso.idCurso}}" th:text="|SI|"/>-->
+        <a th:attr="onclick = ${ 'modalEliminar(' + curso.idCurso + ','''+curso.nomCurso+''')' }" href="#">
+          <span class="glyphicon glyphicon-trash"></span></a>
+      </td>
+      <td align="center">
+        <!--<a th:href="@{|cursoEliminar?codigo=| + ${curso.idCurso}}" th:text="|SI|"/>-->
+        <a th:attr="onclick = ${ 'modalModificar(' + curso.idCurso + ','''+curso.nomCurso+''')' }" href="#">
+          <span class="glyphicon glyphicon-cog"></span></a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<br/>
+<hr/>
+<div class="container">
+  <div class="row d-flex justify-content-center mx-auto">
+    <br />
+    <div class="login-form">
+      <h1>Datos del curso a ingresar</h1>
+      <form th:object="${cursoBean}" action="#" th:action="@{/cursoGrabar}" method="post">
+        <!--Para poder enviar el id de curso a modificar-->
+        <input type="hidden" th:if="${cursoBean.idCurso != null}" th:field="*{idCurso}" />
+        <div class="form-group">
+          <input type="text" th:field="*{nomCurso}" class="form-control text-box"
+                 placeholder="Nombre Curso" />
+          <p th:if="${#fields.hasErrors('nomCurso')}" th:errorclass="formFieldError"
+             th:errors="*{nomCurso}" /></p>
+        </div>
+        <div class="form-group">
+          <input type="date" th:field="*{fechaInicio}" class="form-control text-box"
+                 placeholder="Fecha Inicio"/>
+          <p th:if="${#fields.hasErrors('fechaInicio')}" th:errorclass="formFieldError"
+             th:errors="*{fechaInicio}" /></p>
+        </div>
+        <div class="form-group">
+          <input type="number" th:field="*{alumnosMin}" class="form-control text-box"
+                 placeholder="Mínimo Alumnos" required/>
+          <p th:if="${#fields.hasErrors('alumnosMin')}" th:errorclass="formFieldError"
+             th:errors="*{alumnosMin}" /></p>
+        </div>
+        <div class="form-group">
+          <select name="estado" class="form-control text-box" th:field="*{estado}" required>
+            <option value="0">CREADO</option>
+            <option value="1">EN PROCESO DE VENTA</option>
+            <option value="2">COMPLETO</option>
+          </select>
+        </div>
+        <input type="submit" value="Grabar" class="btn btn-primary button-submit" />
+        <a th:href="@{|cursoListar|}" th:text="|Cancelar|" class="btn btn-primary button-submit"></a>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Inicio del Popup de eliminación -->
+<div class="modal modal-warning fade in" th:id="deleteModal" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Eliminar Curso</h5>
+      </div>
+      <div class="modal-body">
+        <h3 id="msgEliminar"></h3>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">No</button>
+        <a type="button" class="btn btn-outline" id="btnEliminar"><i class="fa fa-check"></i>&nbsp;SI</a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Inicio del Popup de modificacion -->
+<div class="modal modal-warning fade in" th:id="updateModal" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modificar Curso</h5>
+      </div>
+      <div class="modal-body">
+        <h3 id="msgModificar"></h3>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">No</button>
+        <a type="button" class="btn btn-outline" id="btnModificar"><i class="fa fa-check"></i>&nbsp;SI</a>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
